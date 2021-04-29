@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_ecommerce/screens/signup.dart';
+import 'package:my_ecommerce/widgets/changescreen.dart';
+import 'package:my_ecommerce/widgets/mytextformfield.dart';
+import 'package:my_ecommerce/widgets/passwordtextformfield.dart';
+import '../widgets/mybutton.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -23,6 +27,70 @@ void validation() {
 }
 
 class _LoginState extends State<Login> {
+  Widget _buildAllParts() {
+    return Container(
+      height: 350,
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text(
+            'Login',
+            style: TextStyle(
+                color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold),
+          ),
+          MyTextFormField(
+            name: 'email',
+            validator: (value) {
+              if (value == "") {
+                return 'email is required';
+              } else if (!regExp.hasMatch(value)) {
+                return 'email is invalid';
+              }
+              return "";
+            },
+          ),
+          PasswordTextFormField(
+            obserText: obserText,
+            name: 'Password',
+            validator: (value) {
+              if (value == "") {
+                return 'Password is Required';
+              } else if (value.length < 8) {
+                return 'Password is too short';
+              }
+              return "";
+            },
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              setState(() {
+                obserText = !obserText;
+              });
+            },
+          ),
+
+          //////Button
+          MyButton(
+            onPressed: () {
+              validation();
+            },
+            name: "Login",
+          ),
+
+          ChangeScreen(
+            name: "SignUp",
+            whichAccount: "I don't have an account",
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (ctx) => SignUp()),
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,100 +101,7 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                height: 300,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      'Login',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == "") {
-                          return 'email is required';
-                        } else if (!regExp.hasMatch(value)) {
-                          return 'email is invalid';
-                        }
-                        return "";
-                      },
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'email',
-                          hintStyle: TextStyle(color: Colors.black)),
-                    ),
-                    TextFormField(
-                      obscureText: obserText,
-                      validator: (value) {
-                        if (value == "") {
-                          return 'Password is Required';
-                        } else if (value.length < 8) {
-                          return 'Password is too short';
-                        }
-                        return "";
-                      },
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'password',
-                          hintStyle: TextStyle(color: Colors.black),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                obserText = !obserText;
-                              });
-                              FocusScope.of(context).unfocus();
-                            },
-                            child: Icon(
-                                obserText == true
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.black),
-                          )),
-                    ),
-                    Container(
-                      height: 60,
-                      width: double.infinity,
-                      child: RaisedButton(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          color: Colors.blue[800],
-                          onPressed: () {
-                            validation();
-                          }),
-                    ),
-                    Row(
-                      children: [
-                        Text('I Dont Have An Account'),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (ctx) => SignUp()
-                          ),
-                          );
-                          },
-                          child: Text(
-                            'SignUp',
-                            style: TextStyle(
-                                color: Colors.blue[400],
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              )
+              _buildAllParts()
             ],
           ),
         ),

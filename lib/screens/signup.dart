@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_ecommerce/screens/login.dart';
+import 'package:my_ecommerce/widgets/passwordtextformfield.dart';
+import '../widgets/mybutton.dart';
+import '../widgets/changescreen.dart';
+import '../widgets/mytextformfield.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -23,6 +27,92 @@ class SignUpState extends State<SignUp> {
     }
   }
 
+  Widget _buildAllTextFormField() {
+    return Container(
+      height: 360,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          MyTextFormField(
+            name: 'Username',
+            validator: (value) {
+              if (value == "") {
+                return 'Username is Required';
+              } else if (value.length < 6) {
+                return 'Username is too short';
+              }
+              return "";
+            },
+          ),
+          MyTextFormField(
+            name: 'email',
+            validator: (value) {
+              if (value == "") {
+                return 'email is required';
+              } else if (!regExp.hasMatch(value)) {
+                return 'email is invalid';
+              }
+              return "";
+            },
+          ),
+          MyTextFormField(
+            name: 'Phone Number',
+            validator: (value) {
+              if (value == "") {
+                return 'Phone Number is Required';
+              } else if (value.length < 11) {
+                return 'Invalid Phone Number';
+              }
+              return "";
+            },
+          ),
+          PasswordTextFormField(
+            obserText: obserText,
+            name: 'Password',
+            validator: (value) {
+              if (value == "") {
+                return 'Password is Required';
+              } else if (value.length < 8) {
+                return 'Password is too short';
+              }
+              return "";
+            },
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              setState(() {
+                obserText = !obserText;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAllParts() {
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        width: double.infinity,
+        child: Column(children: <Widget>[
+          _buildAllTextFormField(),
+          MyButton(
+              onPressed: () {
+                validation();
+              },
+              name: "SignUp"),
+                SizedBox(height: 15),
+          ChangeScreen(
+            name: "LogIn",
+            whichAccount: "I already have an account",
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (ctx) => Login()),
+              );
+            },
+          )
+        ]));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(resizeToAvoidBottomInset: false, body: _register());
@@ -43,119 +133,10 @@ class SignUpState extends State<SignUp> {
                     children: <Widget>[
                       Text('Register',
                           style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold))
+                              fontSize: 40, fontWeight: FontWeight.bold))
                     ])),
             SizedBox(height: 20),
-            Container(
-                height: 420,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                width: double.infinity,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      TextFormField(
-                        validator: (value) {
-                          if (value == "") {
-                            return 'Username is Required';
-                          } else if (value.length < 6) {
-                            return 'Username is too short';
-                          }
-                          return "";
-                        },
-                        decoration: InputDecoration(
-                            hintText: 'UserName',
-                            hintStyle: TextStyle(color: Colors.black),
-                            border: OutlineInputBorder()),
-                      ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == "") {
-                            return 'email is required';
-                          } else if (!regExp.hasMatch(value)) {
-                            return 'email is invalid';
-                          }
-                          return "";
-                        },
-                        decoration: InputDecoration(
-                            hintText: 'Email',
-                            hintStyle: TextStyle(color: Colors.black),
-                            border: OutlineInputBorder()),
-                      ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == "") {
-                            return 'Phone Number is Required';
-                          } else if (value.length < 11) {
-                            return 'Invalid Phone Number';
-                          }
-                          return "";
-                        },
-                        decoration: InputDecoration(
-                            hintText: 'Phone Number',
-                            hintStyle: TextStyle(color: Colors.black),
-                            border: OutlineInputBorder()),
-                      ),
-                      TextFormField(
-                        obscureText: obserText,
-                        validator: (value) {
-                          if (value == "") {
-                            return 'Password is Required';
-                          } else if (value.length < 8) {
-                            return 'Password is too short';
-                          }
-                          return "";
-                        },
-                        decoration: InputDecoration(
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  obserText = !obserText;
-                                });
-                                FocusScope.of(context).unfocus();
-                              },
-                              child:
-                             Icon(obserText==true ?  Icons.visibility : Icons.visibility_off, 
-                             color: Colors.black),
-                            ),
-                            hintText: 'Password',
-                            hintStyle: TextStyle(color: Colors.black),
-                            border: OutlineInputBorder()),
-                      ),
-                      Container(
-                        height: 60,
-                        width: double.infinity,
-                        child: RaisedButton(
-                            child: Text('Register',
-                                style: TextStyle(color: Colors.white)),
-                            color: Colors.blue[800],
-                            onPressed: () {
-                              validation();
-                            }),
-                      ),
-                      Row(
-                        children: [
-                          Text('I aleady Have An Account'),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: (){
-                            Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (ctx) => Login()
-                          ),
-                          );
-                          },
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                  color: Colors.blue[400],
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        ],
-                      ),
-                    ]))
+            _buildAllParts()
           ],
         )),
       ),
